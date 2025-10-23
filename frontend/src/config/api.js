@@ -1,5 +1,10 @@
-// Use environment variable for API URL, fallback to localhost for development
-export const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+// Resolve API base URL at runtime:
+// 1) window.__API_BASE_URL (for quick overrides)
+// 2) localStorage.API_BASE_URL (set via DevTools: localStorage.setItem('API_BASE_URL', 'https://your-backend'))
+// 3) VITE env at build time
+// 4) '/api' (works only in dev with Vite proxy)
+const runtimeOverride = (typeof window !== 'undefined' && (window.__API_BASE_URL || localStorage.getItem('API_BASE_URL'))) || '';
+export const API_BASE_URL = runtimeOverride || import.meta.env.VITE_API_URL || '/api';
 
 export const api = {
   // Authentication
